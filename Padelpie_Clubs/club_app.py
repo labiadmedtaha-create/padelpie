@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
-import sqlite3, hashlib, secrets, os
+import dbcompat as sqlite3, hashlib, secrets, os
 from pathlib import Path
 from datetime import datetime, date, timedelta
 from werkzeug.utils import secure_filename
@@ -117,7 +117,7 @@ def block_slot(club_id):
     if court_id=='all': courts=con.execute('SELECT id FROM courts WHERE club_id=?',(club_id,)).fetchall(); ids=[r['id'] for r in courts]
     else: ids=[int(court_id)]
     for cid in ids:
-        con.execute('INSERT OR REPLACE INTO club_availability(club_id,court_id,slot_date,slot_time,status,reason) VALUES(?,?,?,?,?,?)',(club_id,cid,d,t,'blocked',reason))
+        con.execute('DELETE FROM club_availability WHERE club_id=? AND court_id=? AND slot_date=? AND slot_time=?',(club_id,cid,d,t)); con.execute('INSERT INTO club_availability(club_id,court_id,slot_date,slot_time,status,reason) VALUES(?,?,?,?,?,?)',(club_id,cid,d,t,'blocked',reason))
     con.commit(); con.close(); flash('Créneau marqué indisponible.','success'); return redirect(url_for('manage_club',club_id=club_id))
 
 @app.route('/club/<int:club_id>/availability/remove',methods=['POST'])

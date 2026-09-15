@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
-import sqlite3
+import dbcompat as sqlite3
 from pathlib import Path
 from datetime import datetime, timedelta
 from functools import wraps
