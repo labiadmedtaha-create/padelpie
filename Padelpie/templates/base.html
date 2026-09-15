@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Padelpie — {{ title or 'Play. Earn. Repeat.' }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="app">
+<div class="top-glow"></div>
+<div class="shell">
+<header class="nav">
+<a class="brand" href="/home"><img src="/static/assets/padelpie-logo.png" alt="Padelpie"><span>Padelpie</span></a>
+<nav class="navlinks">
+<a class="{{ 'active' if request.endpoint=='home' else '' }}" href="/home"><i>⌂</i> Home</a>
+<a class="{{ 'active' if request.endpoint=='book' else '' }}" href="/book"><i>🎾</i> Book</a>
+<a class="{{ 'active' if request.endpoint in ['pies','reward'] else '' }}" href="/pies"><i>🥧</i> Pies</a>
+<a class="{{ 'active' if request.endpoint in ['play','demo_match','prediction'] else '' }}" href="/play"><i>🏆</i> Play</a>
+<a class="{{ 'active' if request.endpoint=='profile' else '' }}" href="/profile"><i>●</i> Profil</a>
+<a href="{{ url_for('club_portal') }}" class="club-link">🏟️ Espace clubs</a><a class="logout" href="/logout">↪</a>
+</nav>
+<div class="nav-wallet">🥧 <b>{{ current_user.pies if current_user else 0 }}</b></div>
+</header>
+{% with messages=get_flashed_messages(with_categories=true) %}{% for category,m in messages %}<div class="flash {{ category }}">{{m}}</div>{% endfor %}{% endwith %}
+{% block content %}{% endblock %}
+</div>
+<div class="bottom">
+<a href="/home" class="{{ 'active' if request.endpoint=='home' else '' }}"><b>⌂</b><span>Home</span></a>
+<a href="/book" class="{{ 'active' if request.endpoint=='book' else '' }}"><b>🎾</b><span>Book</span></a>
+<a href="/pies" class="{{ 'active' if request.endpoint in ['pies','reward'] else '' }}"><b>🥧</b><span>Pies</span></a>
+<a href="/play" class="{{ 'active' if request.endpoint in ['play','demo_match','prediction'] else '' }}"><b>🏆</b><span>Play</span></a>
+<a href="/profile" class="{{ 'active' if request.endpoint=='profile' else '' }}"><b>●</b><span>Profil</span></a>
+</div>
+<script>
+document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.remove('on'));document.querySelectorAll('[data-panel]').forEach(x=>x.classList.remove('show'));btn.classList.add('on');document.querySelector('[data-panel="'+btn.dataset.tab+'"]')?.classList.add('show')}));
+document.querySelectorAll('[data-autosubmit]').forEach(x=>x.addEventListener('change',()=>x.form.submit()));
+</script>
+</body></html>

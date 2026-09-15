@@ -1,0 +1,17 @@
+services:
+  padelpie:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      PADELPIE_DATA_DIR: /data
+      PADELPIE_DB: /data/padelpie.db
+      PADELPIE_UPLOAD_DIR: /data/uploads
+      PADELPIE_SECRET_KEY: ${PADELPIE_SECRET_KEY}
+    volumes:
+      - padelpie_data:/data
+    restart: unless-stopped
+
+volumes:
+  padelpie_data:
