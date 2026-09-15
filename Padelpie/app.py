@@ -96,13 +96,8 @@ def init_db():
         status TEXT DEFAULT 'open', payout INTEGER DEFAULT 0, created_at TEXT NOT NULL
     );
     ''')
-    # Migrations must run after the base tables exist (important for a fresh PostgreSQL database).
-    try:
-        cur.execute("ALTER TABLE users ADD COLUMN photo TEXT DEFAULT ''")
-    except Exception:
-        # Column already exists (or another harmless migration race); continue startup.
-        pass
-
+  # The photo column is already created in the users table above.
+# No ALTER TABLE migration is needed here.
     # Final version: no clubs or courts are pre-seeded. Clubs are added by managers.
     if cur.execute('SELECT COUNT(*) FROM admins WHERE email=?', (ADMIN_EMAIL,)).fetchone()[0] == 0:
         cur.execute('INSERT INTO admins(email,password,name,created_at) VALUES(?,?,?,?)',
